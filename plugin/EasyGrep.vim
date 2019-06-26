@@ -2473,7 +2473,7 @@ function! s:ConfigureGrepCommandParameters()
                 \ 'opt_str_mapinclusionsexpressionseparator': ',',
                 \ 'opt_str_mapinclusionsprefix': '--type-set="easygrep:ext:',
                 \ 'opt_str_mapinclusionspostfix': '" --type=easygrep',
-                \ 'opt_str_nohiddenswitch': '--ignore-file=match:/\\./ --ignore-file=match:/\/./',
+                \ 'opt_str_nohiddenswitch': '--ignore-file=match:/^\\./',
                 \ })
 
     call s:RegisterGrepProgram("ack-grep", g:EasyGrep_commandParamsDict["ack"])
@@ -2809,7 +2809,7 @@ function! s:GetGrepCommandLine(pattern, add, wholeword, count, escapeArgs, filte
 
     " Finally, ensure that the paths we pass to the external grep command are
     " absolute paths. This command may be invoked from any location.
-    if !s:IsCommandVimgrep()
+    if !s:IsCommandVimgrep() && !s:GetGrepCommandName() == "ack"
         call map(fileTargetList, 'substitute(v:val, "^\\.\\/", EasyGrep#GetCwdEscaped()."/", "")')
         call map(fileTargetList, 'substitute(v:val, "^\\.$", EasyGrep#GetCwdEscaped(), "")')
     endif
