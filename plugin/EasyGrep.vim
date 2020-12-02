@@ -2479,7 +2479,7 @@ function! s:ConfigureGrepCommandParameters()
     call s:RegisterGrepProgram("ack-grep", g:EasyGrep_commandParamsDict["ack"])
 
     call s:RegisterGrepProgram("ag", {
-                \ 'req_str_programargs': '--nogroup --nocolor --column',
+                \ 'req_str_programargs': '--vimgrep',
                 \ 'req_bool_supportsexclusions': '1',
                 \ 'req_str_recurse': '',
                 \ 'req_str_caseignore': '-i',
@@ -2499,7 +2499,10 @@ function! s:ConfigureGrepCommandParameters()
                 \ 'opt_bool_isinherentlyrecursive': '1',
                 \ 'opt_bool_isselffiltering': '0',
                 \ 'opt_bool_nofiletargets': '0',
-                \ 'opt_str_mapinclusionsexpression': '"--file-search-regex=\"" .substitute(v:val, "^\\*\\.", "\\\\.", "")."\""',
+                \ 'opt_str_mapinclusionsexpression': 'substitute(v:val, "^\\*\\.", "\\\\.", "")',
+                \ 'opt_str_mapinclusionsexpressionseparator': '\|',
+                \ 'opt_str_mapinclusionsprefix': '--file-search-regex="',
+                \ 'opt_str_mapinclusionspostfix': '" ',
                 \ 'opt_str_hiddenswitch': '--hidden',
                 \ 'opt_str_binaryswitch': '--search-binary',
                 \ 'opt_bool_binaryexcludedbydefault': '1',
@@ -2909,13 +2912,13 @@ function! s:DoGrep(pattern, add, wholeword, count, escapeArgs, xgrep)
         redraw!
         if g:EasyGrepOpenWindowOnMatch
             if g:EasyGrepWindow == 0
-                if !EasyGrep#IsQuickfixListOpen()
+                "if !EasyGrep#IsQuickfixListOpen()
                     execute g:EasyGrepWindowPosition." copen"
-                endif
+                "endif
             else
-                if !EasyGrep#IsLocationListOpen()
+                "if !EasyGrep#IsLocationListOpen()
                     execute g:EasyGrepWindowPosition." lopen"
-                endif
+                "endif
             endif
             setlocal nofoldenable
         endif
@@ -3140,12 +3143,12 @@ function! s:DoReplace(target, replacement, wholeword, escapeArgs)
 
                     if ret == 5
                         if winline() > &scrolloff+1
-                            normal 
+                            normal 
                         endif
                         continue
                     elseif ret == 25
                         if (winheight(0)-winline()) > &scrolloff
-                            normal 
+                            normal 
                         endif
                         continue
                     elseif ret == 27
@@ -3403,12 +3406,12 @@ function! s:ResultListDo(command)
 
                 if ret == 5
                     if winline() > &scrolloff+1
-                        normal 
+                        normal 
                     endif
                     continue
                 elseif ret == 25
                     if (winheight(0)-winline()) > &scrolloff
-                        normal 
+                        normal 
                     endif
                     continue
                 elseif ret == 27
@@ -3880,4 +3883,4 @@ call s:CreateOptionMappings()
 call s:SetWatchExtension()
 call s:CheckDefaultUserPattern()
 "}}}
-
+"
